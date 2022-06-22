@@ -12,7 +12,7 @@ def send_otp(mobile):
     verification = client.verify \
                         .services(service_id) \
                         .verifications \
-                        .create(to= number, channel='sms')
+                        .create(to=number, channel='sms')
 
     print(verification.sid)
     return(verification.sid)

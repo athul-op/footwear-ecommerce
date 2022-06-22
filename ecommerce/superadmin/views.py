@@ -11,7 +11,7 @@ from django.contrib.auth import logout
 
 
 def master_signin(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_superadmin:
         return redirect("admin_home")
 
     if request.method == "POST":
@@ -44,101 +44,126 @@ def master_signin(request):
 
 @login_required(login_url='admin_signin')
 def admin_home(request):
+    if request.user.is_authenticated and request.user.is_superadmin:
 
-    return render (request,'admin/admindash.html')
-
+        return render (request,'admin/admindash.html')
+    else:
+        return redirect("admin_home")
 
 @login_required(login_url='admin_signin')
 def customer(request):
-    users = Account.objects.all()
-    context = {"users": users}
-    return render(request, "admin/customer.html", context)
-
+    if request.user.is_authenticated and request.user.is_superadmin:
+        users = Account.objects.all()
+        context = {"users": users}
+        return render(request, "admin/customer.html", context)
+    else:
+        return redirect("admin_home")
 
 @login_required(login_url='admin_signin')
 def customer_pickoff(request, customer_id):
-    customer = Account.objects.get(pk=customer_id)
-    if customer.is_active:
-        customer.is_active = False
-        
-    else:
-        customer.is_active = True
-    customer.save()
+    if request.user.is_authenticated and request.user.is_superadmin:
+        customer = Account.objects.get(pk=customer_id)
+        if customer.is_active:
+            customer.is_active = False
+            
+        else:
+            customer.is_active = True
+        customer.save()
 
-    return redirect("customer")
+        return redirect("customer")
+    else:
+        return redirect("admin_home")
+
 
 @login_required(login_url='admin_signin')
 def add_product(request):
-    if request.method == "POST":
-        form = ProductForm(request.POST,request.FILES)
-        if form.is_valid():
-            print('valid')
-            form.save()
-            print('data saved successfully')
-            return redirect('add_product')
+    if request.user.is_authenticated and request.user.is_superadmin:
+        if request.method == "POST":
+            form = ProductForm(request.POST,request.FILES)
+            if form.is_valid():
+                print('valid')
+                form.save()
+                print('data saved successfully')
+                return redirect('add_product')
+            else:
+                print('product not added')
+                messages.info(request,'product not added')
         else:
-            print('product not added')
-            messages.info(request,'product not added')
+            form = ProductForm()
+        return render(request,"add_product.html",{'form':form})
     else:
-        form = ProductForm()
-    return render(request,"add_product.html",{'form':form})
+        return redirect("admin_home")
 
 
 @login_required(login_url='admin_signin')
 def view_product(request):
-
-    products = Product.objects.all()
-    context = {"products": products}
-    return render(request, "admin/view_edit.html", context)
-
+    if request.user.is_authenticated and request.user.is_superadmin:
+        products = Product.objects.all()
+        context = {"products": products}
+        return render(request, "admin/view_edit.html", context)
+    else:
+        return redirect("admin_home")
 
 
 
 def edit_product(request, id) :
-    product = Product.objects.get(id=id)
-    if request.method == 'POST' :
-        form = ProductForm(request.POST, request.FILES, instance=product)   
-        if form.is_valid() :
-            form.save()
-            return redirect('view_product')
-        
-    form = ProductForm(instance=product)
-    context = {'form' : form}
-    return render(request,"admin/edit_product.html", context)
-
+    if request.user.is_authenticated and request.user.is_superadmin:
+        product = Product.objects.get(id=id)
+        if request.method == 'POST' :
+            form = ProductForm(request.POST, request.FILES, instance=product)   
+            if form.is_valid() :
+                form.save()
+                return redirect('view_product')
+            
+        form = ProductForm(instance=product)
+        context = {'form' : form}
+        return render(request,"admin/edit_product.html", context)
+    else:
+        return redirect("admin_home")
 
 
 def delete_adminprod(request,id):
-    
-    adminprod =  Product.objects.get(id=id)
-    adminprod.delete()
-    return redirect('view_product')
-
+    if request.user.is_authenticated and request.user.is_superadmin:
+        adminprod =  Product.objects.get(id=id)
+        adminprod.delete()
+        return redirect('view_product')
+    else:
+        return redirect("admin_home")
 
 
 @never_cache
    
 def admin_logouts(request):
+    
+    if request.user.is_superadmin:
 
-    auth.logout(request)
-    return redirect(master_signin)
-
-
+        auth.logout(request)
+        return redirect(master_signin)
+    else:
+        return redirect("admin_home")
+    
 
 @login_required(login_url='admin_signin')
 def order_details(request):
-    order= Order.objects.all()
-    context = {'order':order}
-    return render(request,'admin/billing.html',context)
+    if request.user.is_authenticated and request.user.is_superadmin:
+        order= Order.objects.all()
+        context = {'order':order}
+        return render(request,'admin/billing.html',context)
+    else:
+        return redirect("admin_home")
 
+        
 
 @login_required(login_url='admin_signin')
 def edit_order(request,id):
-    order = Order.objects.get(id=id)
-    if request.method =='POST':
-        status = request.POST['status']
+    if request.user.is_authenticated and request.user.is_superadmin:
+        order = Order.objects.get(id=id)
+        if request.method =='POST':
+            status = request.POST['status']
 
-        order.status=status 
-        order.save()
-        print(order.status)
-    return redirect('order_details')       
+            order.status=status 
+            order.save()
+            print(order.status)
+        return redirect('order_details')       
+    else:
+        return redirect("admin_home")

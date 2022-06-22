@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from decouple import config
 from pathlib import Path
 import os
 
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jq4^-tvpnw%%s@-@80rg_74q#^w#b&%s^u@1b#f(r35rvs_u6%'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default = True, cast = bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'superadmin',
     'orders',
     'coupons',
+    'storages',
     
 ]
 
@@ -56,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -87,12 +90,12 @@ AUTH_USER_MODEL = 'account.Account'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'foot',
-        'USER': 'many',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': config('ENGINE'),
+        'NAME': config('NAME'),
+        'USER': config('USER'),
+        'PASSWORD': config('PASSWORD'),
+        'HOST': config('HOST'),
+        'PORT': config('POST'),
     }
 }
 
@@ -137,17 +140,33 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD= 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = config('DEFAULT_AUTO_FIELD')
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
+#aws 
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_TOKEN = '745320cdbddce3545ea72618d35ab6f2'
-ACCOUNT_SID = 'AC2c26afe2305b86bea73fa8d90e5c6aa4'
-SERVICES_ID= 'VA8e51dd0c5425db31932d44f76779b7b7'
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+AWS_ACCESS_KEY_ID =config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY =config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME =config('AWS_STORAGE_BUCKET_NAME')
+
+
+
+AUTH_TOKEN = config('AUTH_TOKEN')
+ACCOUNT_SID = config('ACCOUNT_SID')
+SERVICES_ID= config('SERVICES_ID')
 
 #rozorpay setting
-RAZOR_KEY_ID ='rzp_test_TuB9kFqkJAQKbH'
-RAZOR_KEY_SECRET='GBgdEN96HBLXUOyqvUyMqh3t'
+
+RAZOR_KEY_ID =config('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET=config('RAZOR_KEY_SECRET')
+
