@@ -63,7 +63,7 @@
 							<ul>
 								<li><a href="{% url 'home' %}">Home</a></li>
 								<li class="has-dropdown">
-									<a href="men.html">All Category</a>
+									<a href="{% url 'home' %}">All Category</a>
 									<ul class="dropdown">
 										{% for category in links %}
 										<li><a href="{{category.get_url}}">{{category.category}}</a></li>
@@ -79,7 +79,8 @@
 									{% else %}
 								       <a  href="{% url 'login' %}">login</a>
 									{% endif %}  
-								</li>  
+								</li>
+								<li class="cart"><a href="{% url 'view_account' %}"><i class="icon icon-user"></i> my account</a></li>  
 								<li class="cart"><a href="{% url 'cart' %}"><i class="icon-shopping-cart"></i> Cart [{{cart_count}}]</a></li>
 								<li class="cart"><a href=""><i class="icon icon-heart"></i> your wishlist[]</a></li>
 							</ul>
