@@ -8,6 +8,7 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
 	
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
@@ -35,6 +36,8 @@
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/coupon.css' %}">
+
 
 	</head>
 	<body>
@@ -218,9 +221,38 @@
 				</div>
 			</div>
 		</div>
+		
+        
+		
+		
+		
 
 		<div class="colorlib-product">
 			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading">
+						<h2>coupons</h2>
+					</div>
+				</div>
+				<div class="row row-pb-md">
+				 
+					{% for coupon in coupons %}	
+					<div style="width:300px ;" class="col-lg-3 mb-4 text-center">
+						<div>
+							
+							<!-- <div class="desc" > -->
+							<div style="width: 200px ;"  class="btn btn-dark">
+								<h2 style="color:white">{{coupon.coupon_code}}</h2>
+								<span class="price">₹{{coupon.amount}}</span>
+							</div>
+							<!-- </div> -->
+						</div>
+						
+					</div>
+				
+					{% endfor %}
+				</div>	
+
 				{% if 'search' in request.path %}
 				 <div class="row">
 					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading">
@@ -258,6 +290,7 @@
 						<h2>No result found please try again</h2>
 					</div>
 					{% endif %}
+				</div>	
 					<!-- <div class="col-lg-3 mb-4 text-center">
 						<div class="product-entry border">
 							<a href="#" class="prod-img">

@@ -1,0 +1,69 @@
+.card{
+
+    background-color: #a0213c;
+     border:none;
+ 
+     border-radius: 15px;
+     padding: 20px;
+ }
+ 
+ 
+ 
+ .discount{
+ 
+     font-size: 15px;
+     color: #fff;
+ }
+ 
+ 
+ .line{
+ 
+     color: #fff;
+ }
+ 
+ 
+ .card1{
+ 
+     background-color: cadetblue;
+      border:none;
+   
+      border-radius: 15px;
+      padding: 20px;
+  }
+ 
+ 
+ 
+ .card2{
+ 
+     background-color: yellowgreen;
+      border:none;
+    
+      border-radius: 15px;
+      padding: 20px;
+  }
+ 
+ .card3{
+ 
+     background-color: teal;
+      border:none;
+ 
+      border-radius: 15px;
+      padding: 20px;
+  }
+ 
+  .card4{
+ 
+     background-color: crimson;
+      border:none;
+ 
+      border-radius: 15px;
+      padding: 20px;
+  }
+  .card5{
+ 
+     background-color: gray;
+      border:none;
+  
+      border-radius: 15px;
+      padding: 20px;
+  }

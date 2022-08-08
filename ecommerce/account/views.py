@@ -15,7 +15,7 @@ from cart.models import *
 from category.models import Category
 from django.contrib.auth.decorators import login_required
 from orders.models import Order
-
+from coupons.models import Coupon
 
 def register(request):
     form = RegistrationForm()
@@ -93,6 +93,7 @@ def user_login(request):
 def home(request,category_slug=None):
     categories = None
     products =None
+    coupons = Coupon.objects.all()
     if category_slug !=None:
 
         categories = get_object_or_404(Category, slug=category_slug)
@@ -110,6 +111,7 @@ def home(request,category_slug=None):
        
     context = {
         'products': paged_products,
+        'coupons' : coupons,
     }
     return render(request,'index.html',context)
 
